@@ -1,7 +1,7 @@
 export default function FloatingWhatsApp() {
   const handleWhatsAppClick = () => {
     const message = encodeURIComponent("Olá! Gostaria de saber mais sobre os doces da Donna Onça Confeitaria Afetiva.");
-    const phoneNumber = "556198637194"; // WhatsApp number
+    const phoneNumber = "5561986377194"; // WhatsApp number
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
     window.open(whatsappUrl, '_blank');
   };
