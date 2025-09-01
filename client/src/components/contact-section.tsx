@@ -197,6 +197,30 @@ export default function ContactSection() {
                     <SelectItem value="kit-festa">
                       Kit Festa Completo
                     </SelectItem>
+                    <SelectItem value="palha-italiana">
+                      Palha Italiana
+                    </SelectItem>
+                    <SelectItem value="beijinhos">
+                      Beijinhos
+                    </SelectItem>
+                    <SelectItem value="casadinhos">
+                      Casadinhos
+                    </SelectItem>
+                    <SelectItem value="bem-casados">
+                      Bem-casados
+                    </SelectItem>
+                    <SelectItem value="brownies">
+                      Brownies
+                    </SelectItem>
+                    <SelectItem value="cookies-decorados">
+                      Cookies Decorados
+                    </SelectItem>
+                    <SelectItem value="cake-pops">
+                      Cake Pops
+                    </SelectItem>
+                    <SelectItem value="bolo-caseiro">
+                      Bolo Caseiro
+                    </SelectItem>
                     <SelectItem value="ambos">Vários Produtos</SelectItem>
                     <SelectItem value="outros">Outros</SelectItem>
                   </SelectContent>
