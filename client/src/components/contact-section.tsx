@@ -162,7 +162,7 @@ export default function ContactSection() {
               </div>
 
               <div>
-                <Label htmlFor="productType">Tipo de Produto *</Label>
+                <Label htmlFor="productType">Produto Principal ou Categoria *</Label>
                 <Select
                   onValueChange={(value) => setValue("productType", value)}
                   data-testid="select-product-type"
@@ -170,7 +170,7 @@ export default function ContactSection() {
                   <SelectTrigger
                     className={errors.productType ? "border-destructive" : ""}
                   >
-                    <SelectValue placeholder="Selecione o produto" />
+                    <SelectValue placeholder="Selecione o produto principal" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="leite-ninho">
@@ -221,6 +221,7 @@ export default function ContactSection() {
                     <SelectItem value="bolo-caseiro">
                       Bolo Caseiro
                     </SelectItem>
+                    <SelectItem value="multiplos">Múltiplos Produtos</SelectItem>
                     <SelectItem value="ambos">Vários Produtos</SelectItem>
                     <SelectItem value="outros">Outros</SelectItem>
                   </SelectContent>
@@ -250,8 +251,8 @@ export default function ContactSection() {
                 <Textarea
                   id="description"
                   {...register("description")}
-                  rows={4}
-                  placeholder="Descreva sua necessidade: tema, quantidade, detalhes especiais..."
+                  rows={5}
+                  placeholder="Descreva seu pedido com detalhes:&#10;• Produtos: 50 brigadeiros, 30 beijinhos, 2 bolos&#10;• Tema/cores: rosa e dourado&#10;• Data: 15/02/2025&#10;• Observações especiais..."
                   className={errors.description ? "border-destructive" : ""}
                   data-testid="textarea-description"
                 />
