@@ -179,7 +179,26 @@ export default function ContactSection() {
                     <SelectItem value="biscoitos">
                       Biscoitos Personalizados
                     </SelectItem>
-                    <SelectItem value="ambos">Ambos</SelectItem>
+                    <SelectItem value="brigadeiros">
+                      Brigadeiros Gourmet
+                    </SelectItem>
+                    <SelectItem value="bolos">
+                      Bolos Decorados
+                    </SelectItem>
+                    <SelectItem value="cupcakes">
+                      Cupcakes
+                    </SelectItem>
+                    <SelectItem value="docinhos">
+                      Docinhos para Festa
+                    </SelectItem>
+                    <SelectItem value="tortas">
+                      Tortas Doces
+                    </SelectItem>
+                    <SelectItem value="kit-festa">
+                      Kit Festa Completo
+                    </SelectItem>
+                    <SelectItem value="ambos">Vários Produtos</SelectItem>
+                    <SelectItem value="outros">Outros</SelectItem>
                   </SelectContent>
                 </Select>
                 {errors.productType && (
