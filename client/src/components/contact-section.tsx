@@ -162,7 +162,9 @@ export default function ContactSection() {
               </div>
 
               <div>
-                <Label htmlFor="productType">Produto Principal ou Categoria *</Label>
+                <Label htmlFor="productType">
+                  Produto Principal ou Categoria *
+                </Label>
                 <Select
                   onValueChange={(value) => setValue("productType", value)}
                   data-testid="select-product-type"
@@ -182,46 +184,30 @@ export default function ContactSection() {
                     <SelectItem value="brigadeiros">
                       Brigadeiros Gourmet
                     </SelectItem>
-                    <SelectItem value="bolos">
-                      Bolos Decorados
-                    </SelectItem>
-                    <SelectItem value="cupcakes">
-                      Cupcakes
-                    </SelectItem>
+                    <SelectItem value="bolos">Bolos Decorados</SelectItem>
+                    <SelectItem value="cupcakes">Cupcakes</SelectItem>
                     <SelectItem value="docinhos">
                       Docinhos para Festa
                     </SelectItem>
-                    <SelectItem value="tortas">
-                      Tortas Doces
-                    </SelectItem>
+                    <SelectItem value="tortas">Tortas Doces</SelectItem>
                     <SelectItem value="kit-festa">
                       Kit Festa Completo
                     </SelectItem>
                     <SelectItem value="palha-italiana">
                       Palha Italiana
                     </SelectItem>
-                    <SelectItem value="beijinhos">
-                      Beijinhos
-                    </SelectItem>
-                    <SelectItem value="casadinhos">
-                      Casadinhos
-                    </SelectItem>
-                    <SelectItem value="bem-casados">
-                      Bem-casados
-                    </SelectItem>
-                    <SelectItem value="brownies">
-                      Brownies
-                    </SelectItem>
+                    <SelectItem value="beijinhos">Beijinhos</SelectItem>
+                    <SelectItem value="casadinhos">Casadinhos</SelectItem>
+                    <SelectItem value="bem-casados">Bem-casados</SelectItem>
+                    <SelectItem value="brownies">Brownies</SelectItem>
                     <SelectItem value="cookies-decorados">
                       Cookies Decorados
                     </SelectItem>
-                    <SelectItem value="cake-pops">
-                      Cake Pops
+                    <SelectItem value="cake-pops">Cake Pops</SelectItem>
+                    <SelectItem value="bolo-caseiro">Bolo Caseiro</SelectItem>
+                    <SelectItem value="multiplos">
+                      Múltiplos Produtos
                     </SelectItem>
-                    <SelectItem value="bolo-caseiro">
-                      Bolo Caseiro
-                    </SelectItem>
-                    <SelectItem value="multiplos">Múltiplos Produtos</SelectItem>
                     <SelectItem value="ambos">Vários Produtos</SelectItem>
                     <SelectItem value="outros">Outros</SelectItem>
                   </SelectContent>
