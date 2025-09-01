@@ -55,11 +55,32 @@ export default function ContactSection() {
     mutationFn: async (data: ContactFormData) => {
       return apiRequest("POST", "/api/contact", data);
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
+      // Formatar mensagem para WhatsApp
+      const message = `🍪 *NOVO PEDIDO - Donna Onça Confeitaria*
+
+👤 *Cliente:* ${variables.name}
+📱 *Telefone:* ${variables.phone}
+📧 *Email:* ${variables.email || 'Não informado'}
+
+🛍️ *Produto:* ${variables.productType}
+📅 *Data do Evento:* ${variables.eventDate || 'Não informado'}
+
+📝 *Descrição do Pedido:*
+${variables.description}
+
+---
+_Pedido enviado através do site_`;
+
+      // Abrir WhatsApp automaticamente
+      const phoneNumber = "5561986377194";
+      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+
       toast({
         title: "Sucesso!",
         description:
-          "Sua solicitação foi enviada com sucesso. Entraremos em contato em breve!",
+          "Pedido enviado! O WhatsApp está abrindo com seus dados organizados.",
       });
       reset();
       setIsSubmitting(false);
