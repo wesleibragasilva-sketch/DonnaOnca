@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(20, 20%, 98%);
+  --foreground: hsl(0, 0%, 18%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(0, 0%, 18%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(0, 0%, 18%);
+  --primary: hsl(346, 77%, 80%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(30, 54%, 90%);
+  --secondary-foreground: hsl(0, 0%, 18%);
+  --muted: hsl(30, 54%, 95%);
+  --muted-foreground: hsl(0, 0%, 45%);
+  --accent: hsl(346, 77%, 85%);
+  --accent-foreground: hsl(0, 0%, 18%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --border: hsl(30, 27%, 88%);
+  --input: hsl(30, 27%, 88%);
+  --ring: hsl(346, 77%, 80%);
+  --gold: hsl(43, 74%, 66%);
+  --rose: hsl(346, 77%, 85%);
+  --radius: 0.75rem;
+}
+
+.dark {
+  --background: hsl(0, 0%, 0%);
+  --foreground: hsl(200, 6.6667%, 91.1765%);
+  --card: hsl(228, 9.8039%, 10%);
+  --card-foreground: hsl(0, 0%, 85.0980%);
+  --popover: hsl(0, 0%, 0%);
+  --popover-foreground: hsl(200, 6.6667%, 91.1765%);
+  --primary: hsl(346, 77%, 80%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(195, 15.3846%, 94.9020%);
+  --secondary-foreground: hsl(210, 25%, 7.8431%);
+  --muted: hsl(0, 0%, 9.4118%);
+  --muted-foreground: hsl(210, 3.3898%, 46.2745%);
+  --accent: hsl(205, 70%, 7.8431%);
+  --accent-foreground: hsl(203, 87.6033%, 52.5490%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(0, 0%, 100%);
+  --border: hsl(210, 5.2632%, 14.9020%);
+  --input: hsl(207, 27.6596%, 18.4314%);
+  --ring: hsl(202, 89.1213%, 53.1373%);
+  --gold: hsl(43, 74%, 66%);
+  --rose: hsl(346, 77%, 85%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer utilities {
+  .font-script {
+    font-family: 'Dancing Script', cursive;
+  }
+  
+  .hero-gradient {
+    background: linear-gradient(135deg, hsl(346, 77%, 85%, 0.1) 0%, hsl(30, 54%, 90%, 0.2) 100%);
+  }
+  
+  .product-card:hover {
+    transform: translateY(-4px);
+    transition: all 0.3s ease;
+  }
+  
+  .gold-text {
+    background: linear-gradient(45deg, hsl(43, 74%, 66%), hsl(43, 74%, 56%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .floating-animation {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+}
