@@ -43,7 +43,7 @@ export default function AboutSection() {
             
             <div className="absolute -top-6 -right-6 bg-primary text-primary-foreground p-4 rounded-xl shadow-lg">
               <div className="text-center">
-                <p className="text-2xl font-bold" data-testid="text-experience-years">3+</p>
+                <p className="text-2xl font-bold" data-testid="text-experience-years">+ de 8</p>
                 <p className="text-sm" data-testid="text-experience-label">Anos de experiência</p>
               </div>
             </div>

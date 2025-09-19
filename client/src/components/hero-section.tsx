@@ -80,7 +80,7 @@ export default function HeroSection() {
                 </div>
                 <div>
                   <p className="font-semibold text-sm" data-testid="text-rating">5.0 estrelas</p>
-                  <p className="text-xs text-muted-foreground" data-testid="text-customers">+200 clientes satisfeitos</p>
+                  <p className="text-xs text-muted-foreground" data-testid="text-customers">+ de 600 clientes satisfeitos</p>
                 </div>
               </div>
             </div>

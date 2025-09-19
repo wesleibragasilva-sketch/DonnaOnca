@@ -1,9 +1,8 @@
-import { useState } from "react";
+"use client";
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useMutation } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useEffect } from "react";
 
 const contactFormSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
@@ -30,7 +30,6 @@ type ContactFormData = z.infer<typeof contactFormSchema>;
 
 export default function ContactSection() {
   const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     register,
@@ -51,54 +50,38 @@ export default function ContactSection() {
     },
   });
 
-  const submitMutation = useMutation({
-    mutationFn: async (data: ContactFormData) => {
-      return apiRequest("POST", "/api/contact", data);
-    },
-    onSuccess: (_, variables) => {
-      // Formatar mensagem para WhatsApp
-      const message = `🍪 *NOVO PEDIDO - Donna Onça Confeitaria*
+  useEffect(() => {
+    // Registrar campo do select manualmente
+    register("productType", { required: true });
+  }, [register]);
 
-👤 *Cliente:* ${variables.name}
-📱 *Telefone:* ${variables.phone}
-📧 *Email:* ${variables.email || 'Não informado'}
+  const formatMessage = (data: ContactFormData) => {
+    return `
+*Novo Pedido Donna Onça 🍬*
 
-🛍️ *Produto:* ${variables.productType}
-📅 *Data do Evento:* ${variables.eventDate || 'Não informado'}
+👤 *Nome:* ${data.name}
+📞 *Telefone:* ${data.phone}
+📧 *Email:* ${data.email || "-"}
+📦 *Produto:* ${data.productType}
+📅 *Data do Evento:* ${data.eventDate || "-"}
+📝 *Descrição:* ${data.description}
+    `;
+  };
 
-📝 *Descrição do Pedido:*
-${variables.description}
-
----
-_Pedido enviado através do site_`;
-
-      // Abrir WhatsApp automaticamente
-      const phoneNumber = "5561986377194";
-      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, '_blank');
-
-      toast({
-        title: "Sucesso!",
-        description:
-          "Pedido enviado! O WhatsApp está abrindo com seus dados organizados.",
-      });
-      reset();
-      setIsSubmitting(false);
-    },
-    onError: (error: any) => {
-      toast({
-        title: "Erro",
-        description:
-          error.message || "Erro ao enviar solicitação. Tente novamente.",
-        variant: "destructive",
-      });
-      setIsSubmitting(false);
-    },
-  });
+  const getWhatsAppURL = (data: ContactFormData) => {
+    const phoneNumber = "5561986377194"; // Número com DDI (sem +)
+    const message = encodeURIComponent(formatMessage(data));
+    return `https://wa.me/${phoneNumber}?text=${message}`;
+  };
 
   const onSubmit = (data: ContactFormData) => {
-    setIsSubmitting(true);
-    submitMutation.mutate(data);
+    const whatsappURL = getWhatsAppURL(data);
+    window.open(whatsappURL, "_blank");
+    reset();
+    toast({
+      title: "Redirecionando...",
+      description: "Seu pedido está sendo enviado via WhatsApp.",
+    });
   };
 
   return (
@@ -115,7 +98,6 @@ _Pedido enviado através do site_`;
         </div>
 
         <div className="grid lg:grid-cols-2 gap-16">
-          {/* Contact Form */}
           <div className="bg-card p-8 rounded-2xl shadow-lg border border-border">
             <h3 className="text-xl font-semibold mb-6">Solicitar Orçamento</h3>
             <form
@@ -131,13 +113,9 @@ _Pedido enviado através do site_`;
                     {...register("name")}
                     placeholder="Seu nome completo"
                     className={errors.name ? "border-destructive" : ""}
-                    data-testid="input-name"
                   />
                   {errors.name && (
-                    <p
-                      className="text-destructive text-sm mt-1"
-                      data-testid="error-name"
-                    >
+                    <p className="text-destructive text-sm mt-1">
                       {errors.name.message}
                     </p>
                   )}
@@ -149,13 +127,9 @@ _Pedido enviado através do site_`;
                     {...register("phone")}
                     placeholder="(61) 98637-7194"
                     className={errors.phone ? "border-destructive" : ""}
-                    data-testid="input-phone"
                   />
                   {errors.phone && (
-                    <p
-                      className="text-destructive text-sm mt-1"
-                      data-testid="error-phone"
-                    >
+                    <p className="text-destructive text-sm mt-1">
                       {errors.phone.message}
                     </p>
                   )}
@@ -170,13 +144,9 @@ _Pedido enviado através do site_`;
                   {...register("email")}
                   placeholder="seu@email.com"
                   className={errors.email ? "border-destructive" : ""}
-                  data-testid="input-email"
                 />
                 {errors.email && (
-                  <p
-                    className="text-destructive text-sm mt-1"
-                    data-testid="error-email"
-                  >
+                  <p className="text-destructive text-sm mt-1">
                     {errors.email.message}
                   </p>
                 )}
@@ -187,8 +157,10 @@ _Pedido enviado através do site_`;
                   Produto Principal ou Categoria *
                 </Label>
                 <Select
-                  onValueChange={(value) => setValue("productType", value)}
-                  data-testid="select-product-type"
+                  onValueChange={(value) =>
+                    setValue("productType", value, { shouldValidate: true })
+                  }
+                  value={watch("productType")}
                 >
                   <SelectTrigger
                     className={errors.productType ? "border-destructive" : ""}
@@ -207,37 +179,24 @@ _Pedido enviado através do site_`;
                     </SelectItem>
                     <SelectItem value="bolos">Bolos Decorados</SelectItem>
                     <SelectItem value="cupcakes">Cupcakes</SelectItem>
-                    <SelectItem value="docinhos">
-                      Docinhos para Festa
-                    </SelectItem>
+                    <SelectItem value="docinhos">Docinhos para Festa</SelectItem>
                     <SelectItem value="tortas">Tortas Doces</SelectItem>
-                    <SelectItem value="kit-festa">
-                      Kit Festa Completo
-                    </SelectItem>
-                    <SelectItem value="palha-italiana">
-                      Palha Italiana
-                    </SelectItem>
+                    <SelectItem value="kit-festa">Kit Festa Completo</SelectItem>
+                    <SelectItem value="palha-italiana">Palha Italiana</SelectItem>
                     <SelectItem value="beijinhos">Beijinhos</SelectItem>
                     <SelectItem value="casadinhos">Casadinhos</SelectItem>
                     <SelectItem value="bem-casados">Bem-casados</SelectItem>
                     <SelectItem value="brownies">Brownies</SelectItem>
-                    <SelectItem value="cookies-decorados">
-                      Cookies Decorados
-                    </SelectItem>
+                    <SelectItem value="cookies-decorados">Cookies Decorados</SelectItem>
                     <SelectItem value="cake-pops">Cake Pops</SelectItem>
                     <SelectItem value="bolo-caseiro">Bolo Caseiro</SelectItem>
-                    <SelectItem value="multiplos">
-                      Múltiplos Produtos
-                    </SelectItem>
+                    <SelectItem value="multiplos">Múltiplos Produtos</SelectItem>
                     <SelectItem value="ambos">Vários Produtos</SelectItem>
                     <SelectItem value="outros">Outros</SelectItem>
                   </SelectContent>
                 </Select>
                 {errors.productType && (
-                  <p
-                    className="text-destructive text-sm mt-1"
-                    data-testid="error-product-type"
-                  >
+                  <p className="text-destructive text-sm mt-1">
                     {errors.productType.message}
                   </p>
                 )}
@@ -249,7 +208,6 @@ _Pedido enviado através do site_`;
                   id="eventDate"
                   type="date"
                   {...register("eventDate")}
-                  data-testid="input-event-date"
                 />
               </div>
 
@@ -259,173 +217,23 @@ _Pedido enviado através do site_`;
                   id="description"
                   {...register("description")}
                   rows={5}
-                  placeholder="Descreva seu pedido com detalhes:&#10;• Produtos: 50 brigadeiros, 30 beijinhos, 2 bolos&#10;• Tema/cores: rosa e dourado&#10;• Data: 15/02/2025&#10;• Observações especiais..."
+                  placeholder="Descreva seu pedido com detalhes..."
                   className={errors.description ? "border-destructive" : ""}
-                  data-testid="textarea-description"
                 />
                 {errors.description && (
-                  <p
-                    className="text-destructive text-sm mt-1"
-                    data-testid="error-description"
-                  >
+                  <p className="text-destructive text-sm mt-1">
                     {errors.description.message}
                   </p>
                 )}
               </div>
 
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={isSubmitting}
-                data-testid="button-submit"
-              >
-                {isSubmitting ? "Enviando..." : "Enviar Solicitação"}
+              <Button type="submit" className="w-full">
+                Enviar Solicitação via WhatsApp
               </Button>
             </form>
           </div>
 
-          {/* Contact Information */}
-          <div className="space-y-8">
-            <div
-              className="bg-card p-8 rounded-2xl shadow-lg border border-border"
-              data-testid="card-contact-info"
-            >
-              <h3 className="text-xl font-semibold mb-6">
-                Informações de Contato Donna Onça
-              </h3>
-              <div className="space-y-4">
-                <div
-                  className="flex items-center space-x-4"
-                  data-testid="contact-phone"
-                >
-                  <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                    <i className="fas fa-phone text-primary"></i>
-                  </div>
-                  <div>
-                    <p className="font-medium">Telefone</p>
-                    <p className="text-muted-foreground">(61) 98637-7194</p>
-                  </div>
-                </div>
-
-                <div
-                  className="flex items-center space-x-4"
-                  data-testid="contact-whatsapp"
-                >
-                  <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                    <i className="fab fa-whatsapp text-primary"></i>
-                  </div>
-                  <div>
-                    <p className="font-medium">WhatsApp</p>
-                    <p className="text-muted-foreground">(61) 98637-7194</p>
-                  </div>
-                </div>
-
-                <div
-                  className="flex items-center space-x-4"
-                  data-testid="contact-email"
-                >
-                  <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                    <i className="fas fa-envelope text-primary"></i>
-                  </div>
-                  <div>
-                    <p className="font-medium">Email</p>
-                    <p className="text-muted-foreground">
-                      roseligomes17@gmail.com
-                    </p>
-                  </div>
-                </div>
-
-                <div
-                  className="flex items-center space-x-4"
-                  data-testid="contact-location"
-                >
-                  <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                    <i className="fas fa-map-marker-alt text-primary"></i>
-                  </div>
-                  <div>
-                    <p className="font-medium">Localização</p>
-                    <p className="text-muted-foreground">Brasília-DF</p>
-                    <p className="text-sm text-muted-foreground">
-                      Entregamos em todo o DF via UBER - Cobramos somente o
-                      valor do UBER
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div
-              className="bg-card p-8 rounded-2xl shadow-lg border border-border"
-              data-testid="card-hours"
-            >
-              <h3 className="text-xl font-semibold mb-6">
-                Horário de Atendimento
-              </h3>
-              <div className="space-y-3">
-                <div
-                  className="flex justify-between"
-                  data-testid="hours-weekdays"
-                >
-                  <span>Segunda à Sexta</span>
-                  <span className="text-muted-foreground">9h às 17h</span>
-                </div>
-                <div
-                  className="flex justify-between"
-                  data-testid="hours-saturday"
-                >
-                  <span>Sábados</span>
-                  <span className="text-muted-foreground">9h às 14h</span>
-                </div>
-                <div
-                  className="flex justify-between"
-                  data-testid="hours-sunday"
-                >
-                  <span>Domingos</span>
-                  <span className="text-muted-foreground">Fechado</span>
-                </div>
-              </div>
-
-              <div
-                className="mt-6 p-4 bg-muted rounded-lg"
-                data-testid="notice-lead-time"
-              >
-                <p className="text-sm text-muted-foreground">
-                  <i className="fas fa-info-circle text-primary mr-2"></i>
-                  Pedidos personalizados: prazo mínimo de 10 Dias
-                </p>
-              </div>
-            </div>
-
-            {/* Social Media */}
-            <div className="text-center" data-testid="social-media">
-              <h3 className="text-lg font-semibold mb-4">
-                Siga-nos nas redes sociais
-              </h3>
-              <div className="flex justify-center space-x-4">
-                <a
-                  href="#"
-                  className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
-                  data-testid="link-instagram"
-                >
-                  <i className="fab fa-instagram text-xl"></i>
-                </a>
-                <a
-                  href="#"
-                  className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
-                  data-testid="link-facebook"
-                >
-                  <i className="fab fa-facebook text-xl"></i>
-                </a>
-                <a
-                  href="#"
-                  className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
-                  data-testid="link-whatsapp-social"
-                >
-                  <i className="fab fa-whatsapp text-xl"></i>
-                </a>
-              </div>
-            </div>
-          </div>
+          {/* Aqui pode manter suas informações de contato e horário, se quiser */}
         </div>
       </div>
     </section>
