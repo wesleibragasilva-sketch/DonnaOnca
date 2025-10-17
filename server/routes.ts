@@ -5,6 +5,12 @@ import { insertContactSubmissionSchema } from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Download projeto completo
+  app.get("/download-projeto", (req, res) => {
+    const filePath = "/home/runner/workspace/public/donna-onca-site.tar.gz";
+    res.download(filePath, "donna-onca-site.tar.gz");
+  });
+
   // Contact form submission
   app.post("/api/contact", async (req, res) => {
     try {
